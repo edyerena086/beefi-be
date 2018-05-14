@@ -1,0 +1,195 @@
+.bg {
+	background: #26293A;
+}
+.bg-secondary {
+	background: #333;
+}
+
+.mtk-logo {
+	max-width: 75%;
+	margin-bottom: 30px;
+}
+
+.bg h2 {
+	color: #fff;
+	font-weight: 700;
+	margin-bottom: 50px;
+}
+
+.mtk-input, .mtk-input-textarea {
+	background: transparent!important;
+	border-top: none!important;
+	border-right: none!important;
+	border-left: none!important;
+	box-shadow: none!important;
+	-webkit-border-radius: 0px!important;
+	-moz-border-radius: 0px!important;
+	border-radius: 0px!important;
+}
+
+.mtk-input-textarea {
+	max-height: 70px;
+	resize: none;
+}
+
+.mtk-form-group {
+	margin-bottom: 50px;
+}
+
+.mtk-green-button {
+	-webkit-border-radius: 3rem;
+	-moz-border-radius: 3rem;
+	border-radius: 3rem;
+	background-color: #4EE4C1;
+	color: #fff;
+	padding-right: 4rem;
+	padding-left: 4rem;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+	width: 80%;
+	text-transform: uppercase;
+}
+
+.mtk-green-button-two {
+	-webkit-border-radius: 3rem;
+	-moz-border-radius: 3rem;
+	border-radius: 3rem;
+	background-color: #4EE4C1;
+	color: #fff;
+	padding-right: 4rem;
+	padding-left: 4rem;
+	padding-top: 3rem;
+	padding-bottom: 3rem;
+	width: 80%;
+	margin-bottom: 2rem;
+	text-transform: uppercase;
+	font-weight: 700;
+}
+
+.mtk-red-button-two {
+	-webkit-border-radius: 3rem;
+	-moz-border-radius: 3rem;
+	border-radius: 3rem2
+	color: #fff;
+	padding-right: 2rem;
+	padding-left: 2rem;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	width: 80%;
+	margin-bottom: 1rem;
+	text-transform: uppercase;
+	font-weight: 700;
+}
+
+.mtk-yellow-button-two {
+	-webkit-border-radius: 3rem;
+	-moz-border-radius: 3rem;
+	border-radius: 3rem;
+	background-color: #EDAD23;
+	color: #fff;
+	padding-right: 3rem;
+	padding-left: 3rem;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+	width: 60%;
+	margin-bottom: 2rem;
+	text-transform: uppercase;
+}
+
+.mtk-h3 {
+	margin-bottom: 60px;
+	font-weight: 700;
+}
+
+.max-image {
+	max-width: 70%;
+}
+
+.mtk-list {
+	list-style-type: none;
+	padding-left: 0px;
+}
+.add-bwallet, .add-bwallet:active, .add-bwallet:hover {
+	font-size: 4rem;
+	text-decoration: none!important;
+	color: #EDAD23!important;
+}
+
+.mtk-line-jump {
+	margin-top: 50px;
+}
+.mtk-line-small {
+	margin-bottom: 25px;
+}
+.black-text {
+	font-weight: 700;
+}
+.mtk-margin-bottom {
+	margin-bottom: 20px;
+}
+
+.cupon-text {
+	font-size: 2.5rem;
+	color: #fff;
+}
+
+.cupon-end-date {
+	font-size: 1.5rem;
+	color: #fff;
+}
+.cupon-end-date-title {
+	font-size: 1.8rem;
+	color: #fff;
+}
+
+.mtk-history-h4, .mtk-history-h5 {
+	color: #fff;
+}
+
+.mtk-history-h4 {
+	font-size: 2rem;
+	font-weight: 700;
+	margin-top: 2.5rem;
+}
+
+.mtk-history-h5 {
+	font-size: 1.8rem;
+	font-weight: 700;
+}
+
+.mkt-bun {
+	border-radius: 50%;
+	width: 100px;
+	height: 100px; 
+	margin-top: -120px;
+	background: #fff;
+}
+
+.mkt-bun-small {
+	border-radius: 50%;
+	width: 86px;
+	height: 86px; 
+	margin-top: -60px;
+	background: #fff;
+}
+
+.mtk-small-circle {
+	border-radius: 50%;
+	width: 25px;
+	height: 25px;
+	background: #fff;
+}
+
+.mtk-smallest-circle {
+	border-radius: 50%;
+	width: 15px;
+	height: 15px;
+	background: #fff;
+}
+
+.go-back, .go-back:hover, .go-back:active {
+	color: #fff;
+	font-size: 1.8rem;
+	padding-top: 1.8rem;
+	display: block;
+}
