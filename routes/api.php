@@ -60,6 +60,8 @@ Route::group(['prefix' => 'promotion'], function () {
     Route::post('get-benefit', 'WS\PromotionInPlaceController@getBenefit');
 });
 
+Route::post('network/password', 'WS\NetworkPasswordController@index');
+
 Route::group(['prefix' => 'track'], function () {
     Route::post('beat', 'WS\TrackController@beat');
 

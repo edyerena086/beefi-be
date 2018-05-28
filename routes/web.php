@@ -16,6 +16,10 @@ Route::get('edgar', function () {
     return encrypt(48);
 });
 
+Route::get('artisan', function () {
+    Artisan::call('storage:link');
+});
+
 Route::post('send-general', 'PushNotificationController@store');
 
 Route::get('/', 'AccountController@home');
@@ -39,6 +43,17 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
     Route::get('edit/{id}', 'DashboardController@getEdit');
 
     Route::post('update/{id}', 'DashboardController@postUpdate');
+
+
+
+    Route::group(['prefix' => 'network'], function () {
+        Route::get('/', 'NetworkPasswordController@index');
+
+        Route::get('edit/{id}', 'NetworkPasswordController@edit');
+        Route::post('update/{id}', 'NetworkPasswordController@update');
+    });
+
+
 
     /**
      * --------------------------------------------------------------------------------------

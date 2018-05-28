@@ -42,6 +42,12 @@
                     <i class="fa fa-home"></i> Clientes
                 </a>
             </li>
+
+            <li>
+                <a href="{{url('dashboard/network')}}">
+                    <i class="fa fa-home"></i> Network Password
+                </a>
+            </li>
         </ul>
     </div>
 </div>

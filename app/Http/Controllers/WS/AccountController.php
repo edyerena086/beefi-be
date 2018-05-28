@@ -265,7 +265,8 @@ class AccountController extends Controller
     {
         $response = [];
 
-        if (strlen(trim($request->proximi)) > 0) {
+        //if (strlen(trim($request->proximi)) > 0) {
+        if (!is_null($request->proximi)) {
             $userId = decrypt($request->user);
 
             $client = Client::where('user_id', '=', $userId)->first();
@@ -279,6 +280,8 @@ class AccountController extends Controller
         } else {
             $response = ['status' => false];
         }
+
+        $response['proximi_length'] = strlen(trim($request->proximi));
 
 
 
