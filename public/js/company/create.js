@@ -4,12 +4,19 @@ $(document).ready(function () {
 
 		var data = new FormData();
 
-        $('form').find(':input').not('#logo').not('#logoBlanco').each(function () {
+        $('form').find(':input').not('#logo').not('#logoBlanco').not('input[type=checkbox]').each(function () {
 
             if ($.trim($(this).val()).length > 0) {
                 //console.log($(this).attr('name') + "=" + $(this).val());
 
                 data.append($(this).attr('name'), $(this).val());
+            }
+        });
+
+        //Get all the ctegories
+        $('input[type=checkbox]').each(function () {
+            if ($(this).is(':checked')) {
+                data.append('categoria[]', $(this).val());
             }
         });
 

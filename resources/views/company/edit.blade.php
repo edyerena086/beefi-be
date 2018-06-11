@@ -79,6 +79,24 @@
         </div>
     </div>
 
+    <h3>
+        Atributos
+    </h3>
+
+    @foreach($categories->chunk(6) as $chunk)
+        <div class="form-group">
+            @foreach($chunk as $category)
+                <div class="col-md-2">
+                    @if($category['checked'] == true)
+                        <label for=""><input type="checkbox" name="categoria[]" value="{{ $category['id'] }}" checked="checked">{{ $category['name'] }}</label>
+                    @else
+                        <label for=""><input type="checkbox" name="categoria[]" value="{{ $category['id'] }}">{{ $category['name'] }}</label>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    @endforeach
+
     {{-- Buttons --}}
     <div class="ln_solid"></div>
     <div class="form-group">

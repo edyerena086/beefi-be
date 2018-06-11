@@ -4,6 +4,10 @@ namespace MetodikaTI\Http\Controllers;
 
 use Carbon\Carbon;
 use MetodikaTI\Sponsor;
+use MetodikaTI\Company;
+use MetodikaTI\Category;
+use MetodikaTI\SponsorCategory;
+use MetodikaTI\SponsorCompany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use MetodikaTI\Http\Requests\Dashboard\Sponsor\StoreRequest;
@@ -20,7 +24,11 @@ class SponsorController extends Controller
 
     public function create()
     {
-        return view('sponsor.create');
+        $companies = Company::all();
+
+        $categories = Category::all();
+
+        return view('sponsor.create', ['companies' => $companies, 'categories' => $categories]);
     }
 
     public function store(StoreRequest $request)
@@ -36,6 +44,34 @@ class SponsorController extends Controller
             $sponsor->company_name = $request->empresa;
 
             if ($sponsor->save()) {
+                //Save categories
+                if ($request->has('categoria')) {
+
+                    foreach ($request->get('categoria') as $key => $value) {
+                        $category = new SponsorCategory();
+
+                        $category->sponsor_id = $sponsor->id;
+                        $category->category_id = $value;
+
+                        $category->save();
+                    }
+
+                }
+
+                if ($request->has('compania')) {
+
+                    //Save companies
+                    foreach ($request->get('compania') as $key => $value) {
+                        $company = new SponsorCompany();
+
+                        $company->sponsor_id = $sponsor->id;
+                        $company->company_id = $value;
+
+                        $company->save();
+                    }
+
+                }
+
             	$response = [
             		'status' => true,
             		'message' => 'Se ha guardado con éxito el sponsor.'

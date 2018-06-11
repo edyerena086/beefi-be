@@ -2,13 +2,19 @@
 
 namespace MetodikaTI\Http\Controllers;
 
+use MetodikaTI\Poll;
 use MetodikaTI\User;
 use MetodikaTI\Client;
+use MetodikaTI\Company;
+use MetodikaTI\Category;
 use MetodikaTI\PushNotification;
+use MetodikaTI\ProgrammerCategory;
+use MetodikaTI\Programmer;
 use MetodikaTI\FinalUserPromotion;
 use Illuminate\Http\Request;
 use MetodikaTI\Http\Requests\PushNotification\StoreRequest;
 use MetodikaTI\Http\Requests\PushNotification\StoreSpecificRequest;
+use MetodikaTI\Http\Requests\PushNotification\ProgrammerRequest;
 
 class PushNotificationController extends Controller
 {
@@ -19,9 +25,15 @@ class PushNotificationController extends Controller
 		return view('push.index', ['pushes' => $pushes, 'centinel' => 1, 'counter' => 0]);
 	}
 
+    /**
+     * [create description]
+     * @return [type] [description]
+     */
 	public function create()
 	{
-		return view('push.create');
+        $categories = Category::all();
+
+		return view('push.create', ['categories' => $categories]);
 	}
 
     public function store(StoreRequest $request)
@@ -29,7 +41,8 @@ class PushNotificationController extends Controller
     	$response;
 
     	//Get all users by gender
-    	$clients = Client::where('gender_id', $request->genero)->where('token', '!=', '')->get();
+    	//$clients = Client::where('gender_id', $request->genero)->where('token', '!=', '')->get();
+        $clients = Client::where('token', '!=', '')->get();
 
     	if ($clients->count() > 0) {
     		define('API_ACCESS_KEY', 'AAAA96jAMpI:APA91bG29LL-rozFQDqaeW3BDJieg5YlKNCz8EKXL2JxMUvMwpkufrhlcZpPVtnpmfpUSx7RAp9hsd73Ldx1bJ_8SMRRrbS_0tAfCqhvZNebxLJKgXMHe6fhJRaXJ6YMuGoGAO72tQlM');
@@ -51,7 +64,10 @@ class PushNotificationController extends Controller
 				'largeIcon'	=> 'large_icon',
 				'smallIcon'	=> 'small_icon',
                 'payload' => [
-                    'id' => 'edgar'
+                    'pushType' => 7,
+                    'title' => $request->titulo,
+                    'description' => $request->mesanje,
+                    'source' => $request->recursoWeb
                 ]
     		];
 
@@ -63,7 +79,7 @@ class PushNotificationController extends Controller
 
     		//Fields
     		$fields = [
-    			'registration_ids' 	=> $registrationIds,
+    			'registration_ids' 	=> ['cN81PLcnXog:APA91bEDnTNrBQDQs1_n2Q4fK86hbWR-QevQWfwaXRFst87hqBm8zfAoG6bLKglLrfR3VE7ifYkshzo8UqkWXAZAJfasr5crcu1-dGiQRk9cnJLtyohM5OOaOPpKE115cVRB9uNJ7eBw'],
 				'data'			=> $msg
     		];
 
@@ -81,7 +97,8 @@ class PushNotificationController extends Controller
 			$record = new PushNotification();
 			$record->title = $request->titulo;
 			$record->message = $request->mensaje;
-			$record->gender = $request->genero;
+			$record->gender = 0;
+            $record->url = $request->recursoWeb;
 
 			if ($inner['success'] > 0) {
 				$record->status = 1;
@@ -557,6 +574,104 @@ class PushNotificationController extends Controller
         return response()->json($response);
     }
 
+    public function toLeavePush(Request $request)
+    {
+        $response;
+
+        //$user = User::find(decrypt($request->user_id));
+        $client = Client::where('proximi_id', $request->text)->first();
+
+        if ($client != null) {
+            //$client = Client::where('user_id', $user->id)->first();
+
+            if ($client != null && $client->token != "") {
+                $company = Company::where('name', strtolower($request->geofence))->first();
+
+                if ($company != null) {
+                    $poll = Poll::where('client_id', $company->id)->first();
+
+                    if ($poll != null) {
+                        define('API_ACCESS_KEY', 'AAAA96jAMpI:APA91bG29LL-rozFQDqaeW3BDJieg5YlKNCz8EKXL2JxMUvMwpkufrhlcZpPVtnpmfpUSx7RAp9hsd73Ldx1bJ_8SMRRrbS_0tAfCqhvZNebxLJKgXMHe6fhJRaXJ6YMuGoGAO72tQlM');
+
+                        $registrationIds = [$client->token];
+
+                        //Message
+                        $msg = [
+                            'message' => $poll->description,
+                            'title' => $poll->title,
+                            'subtitle' => $poll->description,
+                            'tickerText' => $poll->description,
+                            'vibrate'   => 1,
+                            'sound'     => 1,
+                            //'largeIcon' => 'large_icon',
+                            //'smallIcon' => 'small_icon',
+                            'icon' => 'drawable-hdpi-icon',
+                            'payload' => [
+                                'pushType' => 7,
+                                'title' => $poll->title,
+                                'description' => $poll->description,
+                                'source' => $poll->url
+                            ]
+                        ];
+
+                        //Headers
+                        $headers = [
+                            'Authorization: key=' . API_ACCESS_KEY,
+                            'Content-Type: application/json'
+                        ];
+
+                        //Fields
+                        $fields = [
+                            'registration_ids'  => $registrationIds,
+                            'data'          => $msg
+                        ];
+
+                        $ch = curl_init();
+                        curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+                        curl_setopt( $ch,CURLOPT_POST, true );
+                        curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+                        curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+                        curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+                        curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+                        $result = curl_exec($ch );
+                        curl_close( $ch );
+                        $inner = json_decode($result,true);
+
+                        if ($inner['success'] > 0) {
+                            $response = [
+                                'status' => true,
+                                'message' => 'Se ha enviado con éxito la notificación push'
+                            ];
+                        } else {
+                            $response = [
+                                'status' => false,
+                                'message' => 'No se ha podido enviar la notificación push',
+                                'data' => $result
+                            ];
+                        }
+                    } else {
+                        $response = [
+                            'status' => false,
+                            'message' => 'No hay nada que enviar.'
+                        ];
+                    }
+                } else {
+                    $response = [
+                        'status' => false,
+                        'message' => 'No existe la geocerca.'
+                    ];
+                }
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'message' => 'El usuario ingresado no éxiste.'
+            ];
+        }
+
+        return response()->json($response);
+    }
+
     public function toEnterPush(Request $request)
     {
         $response;
@@ -637,4 +752,150 @@ class PushNotificationController extends Controller
 
         return response()->json($response);
     }
+
+
+    public function typeSeven()
+    {
+        //Send push notification
+                    define('API_ACCESS_KEY', 'AAAA96jAMpI:APA91bG29LL-rozFQDqaeW3BDJieg5YlKNCz8EKXL2JxMUvMwpkufrhlcZpPVtnpmfpUSx7RAp9hsd73Ldx1bJ_8SMRRrbS_0tAfCqhvZNebxLJKgXMHe6fhJRaXJ6YMuGoGAO72tQlM');
+
+                    //Message
+                    $msg = [
+                        'message' => "¡Tenemos un beneficio especial para ti 7!",
+                        'title' => "Bee-Fi",
+                        'subtitle' => "¡Tenemos un beneficio especial para ti 7!",
+                        'tickerText' => "¡Tenemos un beneficio especial para ti 7!",
+                        'vibrate'   => 1,
+                        'sound'     => 1,
+                        //'largeIcon' => 'large_icon',
+                        //'smallIcon' => 'small_icon',
+                        'icon' => 'drawable-hdpi-icon',
+                        'payload' => [
+                            'pushType' => 7,
+                            'title' => 'Esta es una prueba',
+                            'description' => 'Esta es la prueba de descripción',
+                            'source' => 'http://www.metodika.mx'
+                        ]
+                    ];
+
+                    //Headers
+                    $headers = [
+                        'Authorization: key=' . API_ACCESS_KEY,
+                        'Content-Type: application/json'
+                    ];
+
+                    //Fields
+                    $fields = [
+                        'registration_ids'  => ['cN81PLcnXog:APA91bEDnTNrBQDQs1_n2Q4fK86hbWR-QevQWfwaXRFst87hqBm8zfAoG6bLKglLrfR3VE7ifYkshzo8UqkWXAZAJfasr5crcu1-dGiQRk9cnJLtyohM5OOaOPpKE115cVRB9uNJ7eBw'],
+                        'data'          => $msg
+                    ];
+
+                    $ch = curl_init();
+                    curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+                    curl_setopt( $ch,CURLOPT_POST, true );
+                    curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+                    curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+                    curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+                    curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+                    $result = curl_exec($ch );
+                    curl_close( $ch );
+                    $inner = json_decode($result,true);
+
+                    if ($inner['success'] > 0) {
+                        $response = [
+                            'status' => true,
+                            'message' => 'Se ha enviado con éxito la notificación push'
+                        ];
+                    } else {
+                        $response = [
+                            'status' => false,
+                            'message' => 'No se ha podido enviar la notificación push',
+                            'data' => $result
+                        ];
+                    }
+
+                    return response()->json($response);
+    }
+
+    public function programmer()
+    {
+        $data = Programmer::orderBy('send', 'DESC')->get();
+
+        return view('programmer.index', ['data' => $data, 'centinel' => 1]);
+    }
+
+    public function createProgrammer()
+    {
+        $categories = Category::all();
+
+        return view('programmer.create', ['categories' => $categories]);
+    }
+
+    public function saveProgrammer(Request $request)
+    {
+        $response;
+
+        $programmer = new Programmer();
+
+
+        $programmer->title = $request->titulo;
+        $programmer->description = $request->mensaje;
+        $programmer->url = $request->recursoWeb;
+        $programmer->send = $request->envio;
+
+        if ($programmer->save()) {
+            if ($request->has('categoria')) {
+                foreach ($request->get('categoria') as $key => $value) {
+                        $category = new ProgrammerCategory();
+
+                        $category->programmer_id = $programmer->id;
+                        $category->category_id = $value;
+
+                        $category->save();
+                    }
+            }
+
+            $response = [
+                'status' => true,
+                'message' => 'Se ha agendado con éxito el envio de la notificación push.'
+            ];
+        } else {
+            $response = [
+                'status' => false,
+                'message' => 'No se ha podido agendar la notificación push.'
+            ];
+        }
+
+        return response()->json($response);
+    }
+
+    public function deleteProgrammer($id)
+    {
+        $response;
+
+        $programmer = Programmer::find(base64_decode($id));
+
+        if ($programmer == null) {
+            $response = [
+                'status' => false,
+                'message' => 'La notificación push a eliminar no existe.'
+            ];
+        } else {
+            if ($programmer->delete()) {
+                $response = [
+                    'status' => true,
+                    'message' => 'Se ha eliminado la notificación push.'
+                ];
+            } else {
+                $response = [
+                    'status' => false,
+                    'message' => 'No se ha eliminado la notificación push.'
+                ];
+            }
+        }
+
+        return response()->json($response);
+    }
+
+
 }

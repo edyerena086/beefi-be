@@ -28,8 +28,8 @@ class StoreNewClientRequest extends FormRequest
             //'email' => 'required|email|unique:users,email',
             //'password' => 'required|min:8|confirmed',
             'imagenDePerfil' => 'sometimes|image',
-            'sexo' => 'required|exists:genders,id',
-            'fechaDeNacimiento' => 'required|date|'
+            //'sexo' => 'sometimes|exists:genders,id',
+            //'fechaDeNacimiento' => 'required|date|'
         ];
     }
 }

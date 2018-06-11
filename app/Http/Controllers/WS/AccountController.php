@@ -114,8 +114,10 @@ class AccountController extends Controller
             $client = new Client();
 
             $client->user_id = $user->id;
-            $client->gender_id = $request->sexo;
-            $client->birthday = $request->fechaDeNacimiento;
+            $client->gender_id = ($request->sexo == '') ? 1 : $request->sexo;
+            if ($request->fechaDeNacimiento != '') {
+                $client->birthday = $request->fechaDeNacimiento;
+            } 
             $client->token = $request->phoneId;
 
 

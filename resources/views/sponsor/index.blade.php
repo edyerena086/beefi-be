@@ -12,9 +12,7 @@
 
 {{-- Top button --}}
 @section('topButton')
-    @if($counter < 1)
         <a href="{{ url('dashboard/sponsor/create')  }}" class="btn btn-primary">Nuevo Sponsor</a>
-    @endif
 @endsection
 
 {{-- Main Content --}}

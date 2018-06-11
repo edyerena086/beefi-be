@@ -2,12 +2,12 @@
 
 {{-- Page Title --}}
 @section('pageTitle')
-    Notiicaciones Push
+    Notificaciones Push Manuales
 @endsection
 
 {{-- Content Title --}}
 @section('contentTitle')
-    Notificaciones Push
+    Notificaciones Push Manuales
 @endsection
 
 {{-- Top button --}}

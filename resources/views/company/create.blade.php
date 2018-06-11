@@ -28,15 +28,6 @@
         </div>
     </div>
 
-    {{--<div class="form-group">
-        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
-            Descripción: <span class="required">*</span>
-        </label>
-        <div class="col-md-6 col-sm-6 col-xs-12">
-            {{Form::textarea('descripcion', null, ['class' => 'form-control col-md-7 col-xs-12', 'required' => 'required'])}}
-        </div>
-    </div>--}}
-
     <div class="form-group">
         <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">
             Logo
@@ -81,6 +72,20 @@
             {{Form::password('password_confirmation', ['class' => 'form-control col-md-7 col-xs-12', 'required' => 'required'])}}
         </div>
     </div>
+
+    <h3>
+        Atributos
+    </h3>
+
+    @foreach($categories->chunk(6) as $chunk)
+        <div class="form-group">
+            @foreach($chunk as $category)
+                <div class="col-md-2">
+                    <label for=""><input type="checkbox" name="categoria[]" value="{{$category->id}}">{{$category->name}}</label>
+                </div>
+            @endforeach
+        </div>
+    @endforeach
 
     {{-- Buttons --}}
     <div class="ln_solid"></div>

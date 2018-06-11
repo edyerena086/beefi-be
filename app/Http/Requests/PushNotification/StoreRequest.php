@@ -26,7 +26,8 @@ class StoreRequest extends FormRequest
         return [
             'titulo' => 'required',
             'mensaje' => 'required',
-            'genero' => 'required|integer|between:1,2'
+            'recursoWeb' => 'required|url'
+            //'genero' => 'required|integer|between:1,2'
         ];
     }
 }

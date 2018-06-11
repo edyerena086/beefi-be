@@ -28,21 +28,63 @@
         </div>
     </div>
 
-    {{--<div class="form-group">
-        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
-            Descripción: <span class="required">*</span>
-        </label>
-        <div class="col-md-6 col-sm-6 col-xs-12">
-            {{Form::textarea('descripcion', null, ['class' => 'form-control col-md-7 col-xs-12', 'required' => 'required'])}}
-        </div>
-    </div>--}}
-
     <div class="form-group">
         <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">
             Imagen
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
             {{Form::file('imagen', ['id' => 'imagen'])}}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">
+            Tipo de sponsor
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <select name="tipo" id="" class="form-control">
+                <option value="0">Seleccionar</option>
+                <option value="1">Por categorias</option>
+                <option value="2">Por establecimiento</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group" id="atributos">
+        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">
+            Atributos
+        </label>
+
+        <div class="col-md-6">
+            @foreach($categories->chunk(3) as $chunk)
+                <div class="row">
+                    @foreach($chunk as $category)
+                        <div class="col-sm-4">
+                            <label for="" id="lblCat"><input type="checkbox" name="categoria[]" value="{{$category->id}}">{{$category->name}}</label>
+                        </div>
+                    @endforeach
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    
+
+    <div class="form-group" id="empresas">
+        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">
+            Empresas para el sponsor
+        </label>
+
+        <div class="col-md-6">
+            @foreach($companies->chunk(3) as $chunk)
+                <div class="row">
+                    @foreach($chunk as $company)
+                        <div class="col-sm-4">
+                            <label for="" id="lblCompa"><input type="checkbox" name="compania[]" value="{{$company->id}}">{{$company->name}}</label>
+                        </div>
+                    @endforeach
+                </div>
+            @endforeach
         </div>
     </div>
 

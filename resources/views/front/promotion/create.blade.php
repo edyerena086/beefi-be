@@ -148,6 +148,20 @@
 
 				<div class="row mtk-line-small">
 					<div class="col-sm-8 text-center black-text">
+						Categoría
+					</div>
+
+					<div class="col-sm-4">
+						<select name="categoria" id="" class="form-control">
+							@foreach($categories as $category)
+								<option value="{{$category->id}}">{{ $category->name }}</option>
+							@endforeach
+						</select>
+					</div>
+				</div>
+
+				<div class="row mtk-line-small">
+					<div class="col-sm-8 text-center black-text">
 						Número de mesa
 					</div>
 

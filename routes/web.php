@@ -11,18 +11,20 @@
 |
 */
 
+Route::get('/', 'AccountController@home');
+
 Route::get('edgar', function () {
 	//return bcrypt('Mku8njdro0@');
-    return encrypt(48);
+    //return encrypt(48);
 });
+
+Route::get('testy', 'PushNotificationController@typeSeven');
 
 Route::get('artisan', function () {
     Artisan::call('storage:link');
 });
 
 Route::post('send-general', 'PushNotificationController@store');
-
-Route::get('/', 'AccountController@home');
 
 
 Route::group(['prefix' => 'account'], function () {
@@ -45,12 +47,46 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
     Route::post('update/{id}', 'DashboardController@postUpdate');
 
 
+    Route::group(['prefix' => 'polls'], function () {
+        Route::get('/', 'PollController@index');
+
+        Route::get('create',  'PollController@create');
+        Route::post('store', 'PollController@store');
+
+        Route::get('delete/{id}', 'PollController@delete');
+    });
+
+
+    Route::group(['prefix' => 'enter'], function () {
+        Route::get('/', 'EnterController@index');
+
+        Route::get('create',  'EnterController@create');
+        Route::post('store', 'EnterController@store');
+
+        Route::get('delete/{id}', 'EnterController@delete');
+    });
+
+
 
     Route::group(['prefix' => 'network'], function () {
         Route::get('/', 'NetworkPasswordController@index');
 
         Route::get('edit/{id}', 'NetworkPasswordController@edit');
         Route::post('update/{id}', 'NetworkPasswordController@update');
+    });
+
+
+
+    Route::group(['prefix' => 'category'], function () {
+        Route::get('/', 'CategoryController@index');
+
+        Route::get('create', 'CategoryController@create');
+        Route::post('store', 'CategoryController@store');
+
+        Route::get('edit/{id}', 'CategoryController@edit');
+        Route::post('update/{id}', 'CategoryController@update');
+
+        Route::get('delete/{id}', 'CategoryController@destroy');
     });
 
 
@@ -105,6 +141,15 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
         Route::get('delete/{id}', 'PushNotificationController@delete');
 
         Route::post('send-specific', 'PushNotificationController@specific');
+
+        Route::group(['prefix' => 'programmer'], function () {
+            Route::get('/', 'PushNotificationController@programmer');
+
+            Route::get('create', 'PushNotificationController@createProgrammer');
+            Route::post('store', 'PushNotificationController@saveProgrammer');
+
+            Route::get('delete/{id}', 'PushNotificationController@deleteProgrammer');
+        });
     });
 
     /**

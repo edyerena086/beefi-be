@@ -5,8 +5,11 @@ namespace MetodikaTI\Http\Controllers;
 use Carbon\Carbon;
 use MetodikaTI\User;
 use MetodikaTI\Company;
+use MetodikaTI\Category;
+use MetodikaTI\CompanyCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Collection;
 use MetodikaTI\Http\Requests\Dashboard\Company\StoreRequest;
 use MetodikaTI\Http\Requests\Dashboard\Company\UpdateRequest;
 
@@ -25,7 +28,9 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        return view('company.create');
+        $categories = Category::all();
+
+        return view('company.create', ['categories' => $categories]);
     }
 
     /**
@@ -68,6 +73,21 @@ class CompanyController extends Controller
             }
 
             if ($company->save()) {
+                //Save categories
+                if ($request->has('categoria')) {
+
+                    foreach ($request->get('categoria') as $key => $value) {
+                        $category = new CompanyCategory();
+
+                        $category->company_id = $company->id;
+                        $category->category_id = $value;
+
+                        $category->save();
+                    }
+                    
+                }
+
+
                 $response = [
                     'status' => true,
                     'message' => 'Se ha guardado con éxito la nueva empresa'
@@ -132,6 +152,24 @@ class CompanyController extends Controller
                 }
 
                 if ($company->user->save()) {
+
+                    $companyCategories = CompanyCategory::where('company_id', $company->id)->get();
+
+                    foreach ($companyCategories as $item) {
+                        $item->delete();
+                    }
+
+                    //Save categories
+                    foreach ($request->get('categoria') as $key => $value) {
+                        $category = new CompanyCategory();
+
+                        $category->company_id = $company->id;
+                        $category->category_id = $value;
+
+                        $category->save();
+                    }
+
+
                     $response = [
                         'status' => true,
                         'message' => 'Se ha actualizado con éxito el cliente'
@@ -156,11 +194,33 @@ class CompanyController extends Controller
     public function edit($id)
     {
         $company = Company::find(base64_decode($id));
+        $categories = Category::all();
 
         if ($company == null) {
             return redirect()->back();
         } else {
-            return view('company.edit', ['company' => $company]);
+
+            $companyCategories = CompanyCategory::where('company_id', $company->id)->get();
+            $innerCC = array();
+
+            foreach ($companyCategories as $item) {
+                $innerCC[] = $item->category_id;
+            }
+
+            $innerData = [];
+
+            foreach ($categories as $category) {
+                $innerData[] = [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'checked' => (in_array($category->id, $innerCC)) ? true : false
+
+                ];
+            }
+
+            return view('company.edit', ['company' => $company, 'categories' => collect($innerData)]);
+            
+            //return collect($innerData)->chunk(2);
         }
     }
 

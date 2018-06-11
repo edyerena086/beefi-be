@@ -10,6 +10,7 @@ use MetodikaTI\Client;
 use MetodikaTI\Company;
 use Illuminate\Http\Request;
 use MetodikaTI\ClientPromotion;
+use MetodikaTI\Category;
 use Illuminate\Support\Facades\Storage;
 use MetodikaTI\Http\Controllers\Controller;
 use MetodikaTI\Http\Requests\Front\ClientPromotion\StoreRequest;
@@ -38,8 +39,9 @@ class ClientPromotionController extends Controller
     public function create()
     {
         $company = Company::where('user_id', Auth::user()->id)->first();
+        $categories = Category::all();
 
-        return view('front.promotion.create', ['company' => $company]);
+        return view('front.promotion.create', ['company' => $company, 'categories' => $categories]);
     }
 
     /**

@@ -9,7 +9,9 @@ use MetodikaTI\User;
 use MetodikaTI\Promotion;
 use MetodikaTI\PromotionClient;
 use MetodikaTI\Labs;
+use MetodikaTI\Programmer;
 use Illuminate\Support\Facades\URL;
+use Carbon\Carbon;
 
 class PushController extends Controller
 {
@@ -220,6 +222,88 @@ class PushController extends Controller
             $labs->variable = $request->variable;
 
             $labs->save();
+        }
+    }
+
+
+    public function programmer()
+    {
+        $var = Carbon::now();
+
+        $parse = Carbon::parse($var->year.'-'.$var->month.'-'.$var->day.' '.$var->hour.':'.$var->minute.':00');
+
+
+        $pushes = Programmer::where('send', $parse)->where('status', 0)->get();
+
+        if ($pushes->count() > 0) {
+
+            foreach ($pushes as $push) {
+
+                $clients = Client::where('token', '!=', '')->get();
+
+                if ($clients->count() > 0) {
+                    define('API_ACCESS_KEY', 'AAAA96jAMpI:APA91bG29LL-rozFQDqaeW3BDJieg5YlKNCz8EKXL2JxMUvMwpkufrhlcZpPVtnpmfpUSx7RAp9hsd73Ldx1bJ_8SMRRrbS_0tAfCqhvZNebxLJKgXMHe6fhJRaXJ6YMuGoGAO72tQlM');
+
+                    $registrationIds = [];
+
+                    foreach($clients as $item) {
+                        $registrationIds[] = $item->token;
+                    }
+
+                    //Message
+                    $msg = [
+                        'message' => $push->description,
+                        'title' => $push->title,
+                        'subtitle' => $push->description,
+                        'tickerText' => $push->description,
+                        'vibrate'   => 1,
+                        'sound'     => 1,
+                        'largeIcon' => 'large_icon',
+                        'smallIcon' => 'small_icon',
+                        'payload' => [
+                            'pushType' => 7,
+                            'title' => $push->title,
+                            'description' => $push->description,
+                            'source' => $push->url
+                        ]
+                    ];
+
+                    //Headers
+                    $headers = [
+                        'Authorization: key=' . API_ACCESS_KEY,
+                        'Content-Type: application/json'
+                    ];
+
+                    //Fields
+                    $fields = [
+                        'registration_ids'  => ['cN81PLcnXog:APA91bEDnTNrBQDQs1_n2Q4fK86hbWR-QevQWfwaXRFst87hqBm8zfAoG6bLKglLrfR3VE7ifYkshzo8UqkWXAZAJfasr5crcu1-dGiQRk9cnJLtyohM5OOaOPpKE115cVRB9uNJ7eBw'],
+                        'data'          => $msg
+                    ];
+
+                    $ch = curl_init();
+                    curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+                    curl_setopt( $ch,CURLOPT_POST, true );
+                    curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+                    curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+                    curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+                    curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+                    $result = curl_exec($ch );
+                    curl_close( $ch );
+                    $inner = json_decode($result,true);
+
+                    if ($inner['success'] > 0) {
+                        echo 'Se ha enviado la push '.$push->id;
+                    } else {
+                        echo 'No se ha podido enviar la push '.$push->id;
+                    }
+                } else {
+                    echo 'No hay clientes que mandar.';
+                }
+
+            }
+
+        } else {
+            return 'No hay nada que mandar.';
         }
     }
 }

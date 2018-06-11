@@ -28,7 +28,8 @@ class StoreRequest extends FormRequest
             'correoElectronico' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
             'logo' => 'sometimes|image',
-            'logoBlanco' => 'sometimes|image'
+            'logoBlanco' => 'sometimes|image',
+            'categoria*' => 'sometimes|integer'
         ];
     }
 }

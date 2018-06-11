@@ -2,8 +2,8 @@
     <div class="menu_section">
         <ul class="nav side-menu">
             <li>
-                <a href="{{url('dashboard')}}">
-                    <i class="fa fa-home"></i> Promociones
+                <a href="{{url('dashboard/enter')}}">
+                    <i class="fa fa-home"></i> Promociones Ubicación
                 </a>
             </li>
 
@@ -15,19 +15,25 @@
 
             <li>
                 <a href="{{url('dashboard/push-notifications')}}">
-                    <i class="fa fa-home"></i> Push Segmentadas
+                    <i class="fa fa-home"></i> Push Manuales
                 </a>
             </li>
 
-            <li>
+            {{--<li>
                 <a href="{{url('dashboard/push-notifications/specific')}}">
                     <i class="fa fa-home"></i> Push Especifica
                 </a>
+            </li>--}}
+
+            <li>
+                <a href="{{url('dashboard/polls')}}">
+                    <i class="fa fa-home"></i> Encuesta de salida
+                </a>
             </li>
 
             <li>
-                <a href="{{url('dashboard/promotion-place')}}">
-                    <i class="fa fa-home"></i> Promoción en lugar
+                <a href="{{url('dashboard/push-notifications/programmer')}}">
+                    <i class="fa fa-home"></i> Push programadas
                 </a>
             </li>
 
@@ -46,6 +52,12 @@
             <li>
                 <a href="{{url('dashboard/network')}}">
                     <i class="fa fa-home"></i> Network Password
+                </a>
+            </li>
+
+            <li>
+                <a href="{{url('dashboard/category')}}">
+                    <i class="fa fa-home"></i> Categorías
                 </a>
             </li>
         </ul>

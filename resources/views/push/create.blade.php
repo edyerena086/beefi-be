@@ -2,12 +2,12 @@
 
 {{-- Page Title --}}
 @section('pageTitle')
-    Nuevo Sponsor
+    Nueva Notificación Manual
 @endsection
 
 {{-- Content Title --}}
 @section('contentTitle')
-    Nueva Notificación
+    Nueva Notificación Manual
 @endsection
 
 {{-- Top button --}}
@@ -39,6 +39,15 @@
 
     <div class="form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+            Recurso web: <span class="required">*</span>
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            {{Form::text('recursoWeb', null, ['class' => 'form-control col-md-7 col-xs-12', 'required' => 'required', 'placeholder' => 'http://'])}}
+        </div>
+    </div>
+
+    {{--<div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
             Genero: <span class="required">*</span>
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -46,9 +55,8 @@
                 <option value="1">Mujeres</option>
                 <option value="2">Hombres</option>
             </select>
-            {{--{{Form::textarea('mensaje', null, ['class' => 'form-control col-md-7 col-xs-12', 'required' => 'required'])}}--}}
         </div>
-    </div>
+    </div>--}}
 
     {{--<div class="form-group">
         <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">
@@ -58,6 +66,20 @@
             {{Form::file('imagen', ['id' => 'imagen'])}}
         </div>
     </div>--}}
+
+    <h3>
+        Atributos
+    </h3>
+
+    @foreach($categories->chunk(6) as $chunk)
+        <div class="form-group">
+            @foreach($chunk as $category)
+                <div class="col-md-2">
+                  <label><input type="checkbox" value="{{$category->id}}"> {{$category->name}}</label>
+                </div>
+            @endforeach
+        </div>
+    @endforeach
 
     {{-- Buttons --}}
     <div class="ln_solid"></div>

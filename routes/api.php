@@ -60,7 +60,13 @@ Route::group(['prefix' => 'promotion'], function () {
     Route::post('get-benefit', 'WS\PromotionInPlaceController@getBenefit');
 });
 
+Route::get('programmer', 'WS\PushController@programmer');
+
 Route::post('network/password', 'WS\NetworkPasswordController@index');
+
+Route::post('test/labs', function () {
+    return response()->json(['status' => true]);
+});
 
 Route::group(['prefix' => 'track'], function () {
     Route::post('beat', 'WS\TrackController@beat');
@@ -70,6 +76,9 @@ Route::group(['prefix' => 'track'], function () {
 
 Route::group(['prefix' => 'push'], function () {
     Route::post('send', 'WS\PushController@postSendPush');
+
+    Route::post('proximi', 'WS\ProximiController@test');
+    Route::post('enter-proximi', 'WS\ProximiController@enter');
 
     Route::post('send-push', 'WS\PushController@postSendFirstPush');
 
@@ -84,6 +93,8 @@ Route::group(['prefix' => 'push'], function () {
     Route::post('beefispot', 'PushNotificationController@beefispot');
 
     Route::post('to-enter-net', 'PushNotificationController@toEnterPush');
+
+    Route::post('to-leave-net', 'PushNotificationController@toLeavePush');
 
     //Check push for las day
     Route::post('three-days', 'PushNotificationController@threeDays');

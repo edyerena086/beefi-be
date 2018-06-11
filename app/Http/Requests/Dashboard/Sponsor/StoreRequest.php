@@ -25,7 +25,9 @@ class StoreRequest extends FormRequest
     {
         return [
             'empresa' => 'required',
-            'imagen' => 'required|image'
+            'imagen' => 'required|image',
+            'categoria*' => 'sometimes|integer|exists:categories,id',
+            'compania*' => 'sometimes|integer|exists:companies,id'
         ];
     }
 }
